@@ -2,12 +2,13 @@ from envs import REGISTRY as env_REGISTRY
 from functools import partial
 from components.episode_buffer import EpisodeBatch
 import numpy as np
-
+from icecream import ic
 import matplotlib.pyplot as plt
 import os
 import logging
 import shutil
 import copy
+from envs.mpe.MPE_env import MPEEnv as MPE
 
 
 class EpisodeRunner:
@@ -18,7 +19,10 @@ class EpisodeRunner:
         self.batch_size = self.args.batch_size_run
         assert self.batch_size == 1
 
-        self.env = env_REGISTRY[self.args.env](**self.args.env_args)
+        if self.args.env == 'mpe':
+            self.env = MPE(self.args)
+        else:
+            self.env = env_REGISTRY[self.args.env](**self.args.env_args)
         self.episode_limit = self.env.episode_limit
         self.t = 0
 
